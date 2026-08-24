@@ -1,0 +1,30 @@
+logs: 
+  collector_yfin_error_logs:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/99_logs"
+    file_name: "error_log"
+    versioned: TRUE
+
+data: 
+  collector_yfin_raw_data:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/00_raw_data"
+    file_name: "raw_data"
+    file_format: "csv"
+    versioned: TRUE
+
+  collector_yfin_cleaned_data:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/01_processed"
+    file_name: "cleaned_data"
+    file_format: "csv"
+    versioned: TRUE
+
+  collector_yfin_log_returns:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/01_processed"
+    file_name: "log_returns_data"
+    file_format: "csv"
+    versioned: TRUE
+
+  collector_yfin_stationarity_check:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/03_summary"
+    file_name: "stationarity_check_summary"
+    file_format: "csv"
+    versioned: TRUE

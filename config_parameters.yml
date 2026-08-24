@@ -1,0 +1,23 @@
+
+time_params:
+  interval : "1m" #use '5m' for 5 minutes
+  period: "7d"
+
+universe_params:
+  universe_name: "universe_1"
+  universe_1 : [
+    "TCS", 
+    "INFY", 
+    "MPHASIS", 
+    "LTIM", 
+    "COFORGE"
+  ]
+
+market_params: 
+  time_zone: "Asia/Kolkata"
+  start_time: "09:30"
+  end_time: "15:30"
+
+
+adf_testing_params:
+  alpha: 0.05
