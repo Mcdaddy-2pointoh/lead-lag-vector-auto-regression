@@ -1,11 +1,12 @@
 
+### Parameters in Data Loading and QC
 time_params:
   interval : "1m" #use '5m' for 5 minutes
   period: "7d"
 
 universe_params:
-  universe_name: "universe_1"
-  universe_1 : [
+  universe_name: "tech_eqs"
+  tech_eqs : [
     "TCS", 
     "INFY", 
     "MPHASIS", 
@@ -21,3 +22,10 @@ market_params:
 
 adf_testing_params:
   alpha: 0.05
+
+### Parameters in Modelling VAR
+var_params:
+  max_lags: 10
+  ic_criterion: "aic" # 'aic', 'bic', 'hqic', 'fpe'
+  alpha: 0.05
+  estimation_method: "ols"  # Options: 'ols', 'mle'

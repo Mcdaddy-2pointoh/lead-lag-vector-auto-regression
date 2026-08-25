@@ -1,10 +1,20 @@
 logs: 
+
+  # PHASE 1: Collection and Processing
   collector_yfin_error_logs:
     directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/99_logs"
     file_name: "error_log"
     versioned: TRUE
 
+  # PHASE 2: VAR Engine
+  var_engine_error_logs:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/99_logs"
+    file_name: "error_log"
+    versioned: TRUE
+
 data: 
+
+  # PHASE 1: Collection and Processing
   collector_yfin_raw_data:
     directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/collector_yfin/00_raw_data"
     file_name: "raw_data"
@@ -28,3 +38,35 @@ data:
     file_name: "stationarity_check_summary"
     file_format: "csv"
     versioned: TRUE
+
+  # PHASE 2: VAR Engine
+  var_engine_phi_matrice:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/01_weights"
+    file_name: "phi_matrices"
+    file_format: "csv"
+    versioned: TRUE
+
+  var_engine_granger_matrix:
+      directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/03_causality_summmary"
+      file_name: "grangers_causality"
+      file_format: "csv"
+      versioned: TRUE
+
+  var_engine_forecast_signals:
+      directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/04_forecasts"
+      file_name: "forecast_signals"
+      file_format: "csv"
+      versioned: TRUE
+
+models:
+
+  # PHASE 2: VAR Engine
+  var_engine_models:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/02_models"
+    file_name: "var_lead_lag_model"
+    versioned: true
+
+  var_engine_metadata:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/02_models"
+    file_name: "var_lead_lag_metadata"
+    versioned: true
