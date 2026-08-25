@@ -6,6 +6,7 @@ import pandas as pd
 import re
 import os
 import json
+import joblib
 
 # Local Imports
 from src.utils.text_operators import format_error_text, format_info_text, format_success_text
@@ -26,6 +27,13 @@ class TextSaveError(Exception):
 
 class TextLoadError(Exception):
     """Raised when loading text fails."""
+
+# Model Saving and Loading Segment
+class ModelSaveError(Exception):
+    """Raised when saving a machine learning model fails."""
+
+class ModelLoadError(Exception):
+    """Raised when loading a machine learning model fails."""
 
 def load_yaml(path: str | Path) -> dict:
     """
@@ -650,4 +658,159 @@ def load_latest_text(
         raise TextLoadError(
             f"Failed to load latest text "
             f"'{file_name}' from {directory}"
+        ) from e
+
+def save_model(
+    model_object: object,
+    directory: str | Path,
+    file_name: str,
+    versioned: bool = False,
+    timestamp_format: str = "%Y%m%d_%H%M%S",
+    suffix: str | None = None,
+) -> Path:
+    """
+    Save a trained model object (e.g., statsmodels VAR, scikit-learn estimator) to disk using joblib.
+    Automatically creates the directory path if it does not exist.
+
+    Args:
+        model_object (object): Model object to serialize.
+        directory (str | Path): Directory path to save the file.
+        file_name (str): Base file name without extension.
+        versioned (bool): If True, append timestamp to filename.
+        timestamp_format (str): Datetime format for versioning.
+        suffix (str | None): Optional suffix appended before timestamp.
+
+    Returns:
+        Path: Path to the saved model file.
+    """
+    import joblib
+
+    try:
+        if model_object is None:
+            raise ValueError("model_object cannot be None")
+
+        directory = Path(directory)
+
+        if directory.exists() and not directory.is_dir():
+            raise NotADirectoryError(
+                f"Path exists but is not a directory: {directory}"
+            )
+
+        directory.mkdir(parents=True, exist_ok=True)
+
+        timestamp = (
+            datetime.now().strftime(timestamp_format) if versioned else None
+        )
+
+        name_parts = [file_name]
+
+        if suffix:
+            name_parts.append(suffix)
+
+        if timestamp:
+            name_parts.append(timestamp)
+
+        file_path = directory / f"{'_'.join(name_parts)}.joblib"
+
+        # Serialize model
+        joblib.dump(model_object, file_path)
+
+        return file_path
+
+    except Exception as e:
+        print(
+            format_error_text(
+                f"Failed to save model '{file_name}' in directory {directory}"
+            )
+        )
+        raise ModelSaveError(
+            f"Failed to save model '{file_name}' in directory {directory}"
+        ) from e
+
+
+def load_latest_model(
+    directory: str | Path,
+    file_name: str,
+    timestamp_format: str = "%Y%m%d_%H%M%S",
+    suffix: str | None = None,
+) -> object:
+    """
+    Load the latest timestamp-versioned serialized model (.joblib) from disk.
+
+    Args:
+        directory (str | Path): Directory containing the model files.
+        file_name (str): Base file name without timestamp or extension.
+        timestamp_format (str): Datetime format used in filenames.
+        suffix (str | None): Optional suffix used in filename matching.
+
+    Returns:
+        object: Deserialized model object.
+    """
+
+    try:
+        directory = Path(directory)
+
+        if not directory.exists() or not directory.is_dir():
+            raise FileNotFoundError(
+                f"Directory does not exist: {directory}"
+            )
+
+        extension = ".joblib"
+
+        # Build filename pattern
+        if suffix is None:
+            pattern = re.compile(
+                rf"^{re.escape(file_name)}_(?P<ts>.+){re.escape(extension)}$"
+            )
+        else:
+            pattern = re.compile(
+                rf"^{re.escape(file_name)}_{re.escape(suffix)}_(?P<ts>.+){re.escape(extension)}$"
+            )
+
+        candidates: list[tuple[datetime, Path]] = []
+
+        # Find matching files
+        for file in directory.iterdir():
+            match = pattern.match(file.name)
+            if not match:
+                continue
+
+            timestamp_str = match.group("ts")
+
+            try:
+                timestamp = datetime.strptime(
+                    timestamp_str,
+                    timestamp_format
+                )
+            except ValueError:
+                continue
+
+            candidates.append((timestamp, file))
+
+        # Handle non-versioned fallback or missing file
+        if not candidates:
+            plain_file = f"{file_name}{extension}"
+
+            if plain_file in os.listdir(directory):
+                latest_file = directory / plain_file
+            else:
+                raise FileNotFoundError(
+                    f"No versioned model files found for '{file_name}' in {directory}"
+                )
+
+        # Select latest version
+        else:
+            latest_file = max(candidates, key=lambda x: x[0])[1]
+
+        # Deserialize and return model
+        return joblib.load(latest_file)
+
+    except Exception as e:
+        print(
+            format_error_text(
+                f"Failed to load latest model '{file_name}' from {directory}"
+            )
+        )
+        raise ModelLoadError(
+            f"Failed to load latest model '{file_name}' from {directory}"
         ) from e
