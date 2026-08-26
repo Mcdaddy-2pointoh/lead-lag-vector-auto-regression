@@ -58,6 +58,20 @@ data:
       file_format: "csv"
       versioned: TRUE
 
+  # PHASE 3: Signal Generator
+  output_signal_weights:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/05_target_signals"
+    file_name: "target_position_weights"
+    file_format: "csv"
+    versioned: TRUE
+
+  output_signal_metadata:
+    directory: "C:/Users/sharv/Documents/Sharvil/Projects/lead-lag-vector-auto-regression/data/var_engine/05_target_signals"
+    file_name: "target_position_metadata"
+    file_format: "csv"
+    versioned: TRUE
+
+
 models:
 
   # PHASE 2: VAR Engine
