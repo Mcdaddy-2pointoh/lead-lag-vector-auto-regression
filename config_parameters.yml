@@ -29,3 +29,10 @@ var_params:
   ic_criterion: "aic" # 'aic', 'bic', 'hqic', 'fpe'
   alpha: 0.05
   estimation_method: "ols"  # Options: 'ols', 'mle'
+
+### Parameters in Signal Generator VAR
+granger_causal_signal_gen_params:
+  min_log_returns_threshold: 0.0005
+  max_position_size: 1.0
+  volatility_scaling: true
+  target_volatility: 0.15
